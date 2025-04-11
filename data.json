@@ -1,0 +1,16 @@
+[
+  {
+    "name": "Nguyễn Văn A",
+    "date": "2025-04-10",
+    "reason": "Mua áo thun",
+    "amount": 250000,
+    "discount": 10
+  },
+  {
+    "name": "Trần Thị B",
+    "date": "2025-04-11",
+    "reason": "Đặt hàng đồ chơi",
+    "amount": 120000,
+    "discount": 0
+  }
+]
