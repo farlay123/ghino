@@ -1,35 +1,61 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ghi nợ | Hoàng Minh Thản</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <div class="container">
-    <h1>📒 Ghi nợ | Hoàng Minh Thản</h1>
-    <p>Nhập tên của bạn để tra cứu khoản nợ:</p>
-    <input type="text" id="searchInput" placeholder="Ví dụ: Nguyễn Văn A" />
-    <button onclick="searchDebt()">Tra cứu</button>
-
-    <div id="result" class="result-box hidden">
-      <h2>Kết quả tra cứu</h2>
-      <p><strong>🧍 Tên:</strong> <span id="name"></span></p>
-      <p><strong>🗓 Ngày:</strong> <span id="date"></span></p>
-      <p><strong>📋 Nội dung:</strong> <span id="content"></span></p>
-      <p><strong>💰 Số tiền gốc:</strong> <span id="amount"></span></p>
-      <p><strong>🔻 Chiết khấu:</strong> <span id="discount"></span></p>
-      <p><strong>✅ Cần thanh toán:</strong> <span id="final"></span></p>
-
-      <div class="bank-info">
-        <h3>🏦 Chuyển khoản</h3>
-        <p><strong>Tên:</strong> Hoàng Minh Thản</p>
-        <p><strong>Số tài khoản:</strong> 956216528888</p>
-        <p><strong>Ngân hàng:</strong> Techcombank</p>
-        <img src="image.png" alt="QR chuyển khoản" class="qr" />
+  <div class="main-grid">
+    <div class="left-column">
+      <h1>📒 Ghi nợ</h1>
+      <p>Nhập tên của bạn để tra cứu khoản nợ:</p>
+      <input type="text" id="searchInput" placeholder="Ví dụ: Nguyễn Văn A" />
+      <button onclick="searchDebt()">Tra cứu</button>
+      <div id="result" class="result-box hidden">
+        <h2>Kết quả tra cứu</h2>
+        <p><strong>🧍 Tên:</strong> <span id="name"></span></p>
+        <p><strong>🗓 Ngày:</strong> <span id="date"></span></p>
+        <p><strong>📋 Nội dung:</strong> <span id="content"></span></p>
+        <p><strong>💰 Số tiền gốc:</strong> <span id="amount"></span></p>
+        <p><strong>🔻 Chiết khấu:</strong> <span id="discount"></span></p>
+        <p><strong>✅ Cần thanh toán:</strong> <span id="final"></span></p>
+        <div class="bank-info">
+          <h3>🏦 Chuyển khoản</h3>
+          <p><strong>Tên:</strong> Hoàng Minh Thản</p>
+          <p><strong>Số tài khoản:</strong> 956216528888</p>
+          <p><strong>Ngân hàng:</strong> Techcombank</p>
+          <img src="image.png" alt="QR chuyển khoản" class="qr" />
+        </div>
       </div>
+      <div id="adminForm" class="admin-box hidden">
+        <h2>➕ Thêm khoản nợ</h2>
+        <input type="text" id="adminName" placeholder="Tên người nợ" />
+        <input type="date" id="adminDate" />
+        <input type="text" id="adminContent" placeholder="Nội dung nợ" />
+        <input type="number" id="adminAmount" placeholder="Số tiền (VND)" />
+        <input type="number" id="adminDiscount" placeholder="Chiết khấu (VND)" />
+        <button onclick="addDebt()">Lưu</button>
+      </div>
+    </div>
+    <div class="right-column">
+      <h2>📊 Tổng quan khoản nợ</h2>
+      <table id="debtTable">
+        <thead>
+          <tr>
+            <th>Tên</th>
+            <th>Ngày</th>
+            <th>Nội dung</th>
+            <th>Số tiền</th>
+            <th>Chiết khấu</th>
+            <th>Thanh toán</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <canvas id="debtChart" width="400" height="200"></canvas>
     </div>
   </div>
   <script src="script.js"></script>
