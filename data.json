@@ -1,10 +1,24 @@
 [
   {
-    "name": "Nguyễn Văn A",
-    "date": "2025-04-10",
-    "reason": "Mua áo thun",
-    "amount": 250000,
-    "discount": 10
+    "name": "Nguyễn Lê Quốc Vỹ",
+    "date": "2025-04",
+    "reason": "Bánh bao xá xíu phô mai",
+    "amount": 15000,
+    "discount": 0
+  },
+  {
+    "name": "Nguyễn Lê Quốc Vỹ",
+    "date": "2025-04",
+    "reason": "Cà phê muối",
+    "amount": 18000,
+    "discount": 0
+  },
+  {
+    "name": "Nguyễn Lê Quốc Vỹ",
+    "date": "2025-04",
+    "reason": "Lạp xưởng nướng đá",
+    "amount": 24000,
+    "discount": 0
   },
   {
     "name": "Trần Thị B",
