@@ -1,86 +1,872 @@
-<!-- index.html -->
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>📊 Tra cứu</title>
-  <link rel="stylesheet" href="style.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-  <script defer src="script.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion de Dettes Personnalisée</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fontsource/inter@4.5.15/index.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fontsource/poppins@4.5.10/index.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+    <style>
+        :root {
+            --bg-light: #f9fafb;
+            --text-light: #1f2937;
+            --bg-dark: #1f2937;
+            --text-dark: #f9fafb;
+            --primary: #3b82f6;
+            --secondary: #10b981;
+            --accent: #8b5cf6;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .light-mode {
+            background: linear-gradient(135deg, var(--bg-light), #dbeafe);
+            color: var(--text-light);
+        }
+        
+        .dark-mode {
+            background: linear-gradient(135deg, var(--bg-dark), #1e40af);
+            color: var(--text-dark);
+        }
+        
+        .card {
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .light-mode .card {
+            background-color: rgba(255, 255, 255, 0.7);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dark-mode .card {
+            background-color: rgba(31, 41, 55, 0.7);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+        }
+        
+        .btn {
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .autocomplete-items {
+            position: absolute;
+            border: 1px solid #ddd;
+            z-index: 99;
+            max-height: 150px;
+            overflow-y: auto;
+            width: 100%;
+        }
+        
+        .light-mode .autocomplete-items div {
+            padding: 10px;
+            cursor: pointer;
+            background-color: white;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .dark-mode .autocomplete-items div {
+            padding: 10px;
+            cursor: pointer;
+            background-color: #374151;
+            border-bottom: 1px solid #4b5563;
+        }
+        
+        .light-mode .autocomplete-items div:hover {
+            background-color: #e9e9e9;
+        }
+        
+        .dark-mode .autocomplete-items div:hover {
+            background-color: #4b5563;
+        }
+        
+        .form-input, .form-select {
+            transition: border 0.3s ease;
+        }
+        
+        .light-mode .form-input, .light-mode .form-select {
+            background-color: white;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .dark-mode .form-input, .dark-mode .form-select {
+            background-color: #374151;
+            border: 1px solid #4b5563;
+            color: white;
+        }
+        
+        .light-mode .form-input:focus, .light-mode .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+        }
+        
+        .dark-mode .form-input:focus, .dark-mode .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .light-mode th {
+            background-color: #e5e7eb;
+        }
+        
+        .dark-mode th {
+            background-color: #4b5563;
+        }
+        
+        .light-mode tr:nth-child(even) {
+            background-color: rgba(249, 250, 251, 0.8);
+        }
+        
+        .dark-mode tr:nth-child(even) {
+            background-color: rgba(55, 65, 81, 0.8);
+        }
+        
+        .light-mode tr:hover {
+            background-color: #dbeafe;
+        }
+        
+        .dark-mode tr:hover {
+            background-color: #1e40af;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+    </style>
 </head>
-<body>
-  <div class="container">
-    <header>
-      <img src="logo.png" alt="Logo" class="logo">
-      <div class="header-title">
-        <h1>📒 Ghi nợ | Tra cứu</h1>
-        <p class="slogan">"Ghi nợ xịn xò – Không lo quên số!"</p>
-      </div>
-      <label class="switch">
-        <input type="checkbox" id="theme-toggle">
-        <span class="slider round"></span>
-      </label>
-    </header>
-
-    <div class="content">
-      <div class="left-panel">
-        <h2>🔍 Tra cứu khoản nợ</h2>
-        <input type="text" id="searchInput" placeholder="Nhập tên bạn..." oninput="showSuggestions(this.value)">
-        <ul id="suggestions" class="suggestions-list hidden"></ul>
-
-        <div class="date-range">
-          <input type="date" id="startDate">
-          <span>đến</span>
-          <input type="date" id="endDate">
+<body class="light-mode min-h-screen">
+    <div class="container mx-auto p-4">
+        <!-- Login Section -->
+        <div id="loginSection" class="flex flex-col items-center justify-center min-h-screen">
+            <div class="card p-8 rounded-lg w-full max-w-md">
+                <h1 class="text-3xl font-bold text-center mb-6">Gestion de Dettes</h1>
+                <p class="text-center mb-8 italic">"Ghi nợ xịn xò – Không lo quên số!"</p>
+                
+                <div class="mb-4">
+                    <label class="block mb-2">Nom d'utilisateur</label>
+                    <input type="text" id="username" class="form-input w-full px-4 py-2 rounded-md" placeholder="Votre nom">
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block mb-2">Mot de passe (admin uniquement)</label>
+                    <input type="password" id="password" class="form-input w-full px-4 py-2 rounded-md" placeholder="Laisser vide pour utilisateur standard">
+                </div>
+                
+                <button id="loginBtn" class="btn w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md">
+                    Connexion
+                </button>
+            </div>
         </div>
-        <button onclick="searchDebt()">Tra cứu</button>
 
-        <div id="result" class="hidden">
-          <h3>Kết quả tra cứu</h3>
-          <table id="debtTable">
-            <thead>
-              <tr>
-                <th>📅 Ngày</th>
-                <th>🤔 Người nợ</th>
-                <th>📋 Nội dung</th>
-                <th>💰 Số tiền</th>
-                <th>🔻 Giảm</th>
-                <th>✅ Còn lại</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
+        <!-- Main Application (Hidden initially) -->
+        <div id="appSection" class="hidden">
+            <header class="flex justify-between items-center mb-6">
+                <h1 class="text-3xl font-bold">Gestion de Dettes</h1>
+                <div class="flex items-center space-x-4">
+                    <span id="userDisplay" class="font-medium"></span>
+                    <button id="toggleMode" class="btn p-2 rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                    </button>
+                    <button id="logoutBtn" class="btn bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded-md">
+                        Déconnexion
+                    </button>
+                </div>
+            </header>
+
+            <!-- Admin Controls (Hidden for non-admin users) -->
+            <div id="adminControls" class="card p-6 rounded-lg mb-6 hidden">
+                <h2 class="text-xl font-bold mb-4">Enregistrer une dette</h2>
+                <form id="debtForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="relative">
+                        <label class="block mb-2">Débiteur</label>
+                        <input type="text" id="debtorName" class="form-input w-full px-4 py-2 rounded-md" placeholder="Nom du débiteur">
+                        <div id="debtorSuggestions" class="autocomplete-items"></div>
+                    </div>
+                    
+                    <div>
+                        <label class="block mb-2">Date</label>
+                        <input type="date" id="debtDate" class="form-input w-full px-4 py-2 rounded-md" value="">
+                    </div>
+                    
+                    <div class="md:col-span-2">
+                        <label class="block mb-2">Description</label>
+                        <input type="text" id="debtDescription" class="form-input w-full px-4 py-2 rounded-md" placeholder="Description de la dette">
+                    </div>
+                    
+                    <div>
+                        <label class="block mb-2">Montant</label>
+                        <input type="number" id="debtAmount" class="form-input w-full px-4 py-2 rounded-md" placeholder="0" min="0">
+                    </div>
+                    
+                    <div>
+                        <label class="block mb-2">Remise (optionnel)</label>
+                        <input type="number" id="debtDiscount" class="form-input w-full px-4 py-2 rounded-md" placeholder="0" min="0">
+                    </div>
+                    
+                    <div class="md:col-span-2">
+                        <button type="submit" class="btn bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md w-full">
+                            Enregistrer
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="flex flex-col lg:flex-row gap-6">
+                <!-- Left Column: Search & Results -->
+                <div class="w-full lg:w-3/5 card p-6 rounded-lg">
+                    <h2 class="text-xl font-bold mb-4">Recherche de dettes</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <div class="relative">
+                            <label class="block mb-2">Nom</label>
+                            <input type="text" id="searchName" class="form-input w-full px-4 py-2 rounded-md" placeholder="Nom du débiteur">
+                            <div id="searchSuggestions" class="autocomplete-items"></div>
+                        </div>
+                        
+                        <div>
+                            <label class="block mb-2">Du</label>
+                            <input type="date" id="startDate" class="form-input w-full px-4 py-2 rounded-md">
+                        </div>
+                        
+                        <div>
+                            <label class="block mb-2">Au</label>
+                            <input type="date" id="endDate" class="form-input w-full px-4 py-2 rounded-md">
+                        </div>
+                    </div>
+                    
+                    <button id="searchBtn" class="btn bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md mb-6">
+                        Rechercher
+                    </button>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full">
+                            <thead>
+                                <tr>
+                                    <th class="px-4 py-2 text-left">Date</th>
+                                    <th class="px-4 py-2 text-left">Débiteur</th>
+                                    <th class="px-4 py-2 text-left">Description</th>
+                                    <th class="px-4 py-2 text-right">Montant</th>
+                                    <th class="px-4 py-2 text-right">Remise</th>
+                                    <th class="px-4 py-2 text-right">Total</th>
+                                    <th id="actionHeader" class="px-4 py-2 text-center hidden">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="resultsTable"></tbody>
+                        </table>
+                    </div>
+                    
+                    <div id="totalAmount" class="mt-4 text-xl font-bold text-right"></div>
+                </div>
+
+                <!-- Right Column: Stats & Payment Info -->
+                <div class="w-full lg:w-2/5">
+                    <div class="card p-6 rounded-lg mb-6">
+                        <h2 class="text-xl font-bold mb-4">Statistiques</h2>
+                        <div class="h-64">
+                            <canvas id="debtChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="card p-6 rounded-lg">
+                        <h2 class="text-xl font-bold mb-4">Informations de paiement</h2>
+                        <div class="flex flex-col md:flex-row items-center justify-between">
+                            <div class="mb-4 md:mb-0">
+                                <p class="font-medium">Bénéficiaire: <span class="font-bold">Hoàng Minh Thản</span></p>
+                                <p class="font-medium">Compte: <span class="font-bold">956216528888 (Techcombank)</span></p>
+                            </div>
+                            
+                            <div class="w-48 h-48 bg-white p-2 rounded-lg flex items-center justify-center">
+                                <!-- Replace with your actual QR code -->
+                                <div class="text-center text-gray-500">
+                                    [Code QR ici]
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-center mt-4 italic">"Ghi nợ xịn xò – Không lo quên số!"</p>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-
-      <div class="right-panel">
-        <h2>📈 Dòng tiền</h2>
-        <canvas id="chartCanvas"></canvas>
-
-        <div class="bank-info">
-          <h3>🏦 Chuyển khoản</h3>
-          <p><strong>Tên:</strong> Hoàng Minh Thản</p>
-          <p><strong>Số tài khoản:</strong> <span class="highlight">956216528888</span></p>
-          <p><strong>Ngân hàng:</strong> Techcombank</p>
-          <img src="image.png" alt="QR chuyển khoản" class="qr-large">
-        </div>
-      </div>
     </div>
 
-    <div id="adminPanel" class="hidden">
-      <h2>📝 Ghi nợ mới</h2>
-      <form id="debtForm">
-        <input type="text" id="debtor" placeholder="Tên người nợ" list="debtorSuggestions" required>
-        <datalist id="debtorSuggestions"></datalist>
-        <input type="date" id="debtDate" required>
-        <input type="text" id="contentInput" placeholder="Nội dung" required>
-        <input type="number" id="amount" placeholder="Số tiền" required>
-        <input type="number" id="discount" placeholder="Giảm giá (nếu có)">
-        <button type="submit">Thêm khoản nợ</button>
-      </form>
-    </div>
-  </div>
+    <script>
+        // Initialize data
+        if (!localStorage.getItem('debtData')) {
+            localStorage.setItem('debtData', JSON.stringify({
+                debts: [],
+                users: [
+                    { name: 'Nguyễn Văn A' },
+                    { name: 'Trần Thị B' },
+                    { name: 'Lê Văn C' },
+                    { name: 'Phạm Thị D' },
+                    { name: 'Hoàng Văn E' }
+                ],
+                adminPassword: 'admin123' // Simple password for demo
+            }));
+        }
+
+        // DOM Elements
+        const loginSection = document.getElementById('loginSection');
+        const appSection = document.getElementById('appSection');
+        const adminControls = document.getElementById('adminControls');
+        const actionHeader = document.getElementById('actionHeader');
+        const userDisplay = document.getElementById('userDisplay');
+        const toggleModeBtn = document.getElementById('toggleMode');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const debtForm = document.getElementById('debtForm');
+        const resultsTable = document.getElementById('resultsTable');
+        const totalAmount = document.getElementById('totalAmount');
+        const searchBtn = document.getElementById('searchBtn');
+        const loginBtn = document.getElementById('loginBtn');
+
+        // Global variables
+        let currentUser = null;
+        let isAdmin = false;
+        let chart = null;
+
+        // Toggle dark/light mode
+        toggleModeBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            document.body.classList.toggle('light-mode');
+            updateChart();
+        });
+
+        // Login functionality
+        loginBtn.addEventListener('click', () => {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            
+            if (!username) {
+                alert('Veuillez entrer un nom d\'utilisateur');
+                return;
+            }
+            
+            const debtData = JSON.parse(localStorage.getItem('debtData'));
+            
+            if (password === debtData.adminPassword) {
+                isAdmin = true;
+            } else {
+                isAdmin = false;
+            }
+            
+            // Add user if not exists
+            if (!debtData.users.some(user => user.name === username)) {
+                debtData.users.push({ name: username });
+                localStorage.setItem('debtData', JSON.stringify(debtData));
+            }
+            
+            currentUser = username;
+            userDisplay.textContent = `${username} ${isAdmin ? '(Admin)' : ''}`;
+            
+            // Show/hide admin controls
+            adminControls.classList.toggle('hidden', !isAdmin);
+            actionHeader.classList.toggle('hidden', !isAdmin);
+            
+            // Hide login, show app
+            loginSection.classList.add('hidden');
+            appSection.classList.remove('hidden');
+            
+            // Initialize app
+            loadDebts();
+            updateChart();
+            
+            // Animation
+            anime({
+                targets: '.card',
+                translateY: [20, 0],
+                opacity: [0, 1],
+                duration: 800,
+                easing: 'easeOutElastic(1, .8)',
+                delay: anime.stagger(100)
+            });
+        });
+
+        // Logout functionality
+        logoutBtn.addEventListener('click', () => {
+            currentUser = null;
+            isAdmin = false;
+            appSection.classList.add('hidden');
+            loginSection.classList.remove('hidden');
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        });
+
+        // Load debts and display in table
+        function loadDebts(nameFilter = '', startDate = '', endDate = '') {
+            const debtData = JSON.parse(localStorage.getItem('debtData'));
+            let filteredDebts = debtData.debts;
+            
+            // Apply filters
+            if (nameFilter) {
+                filteredDebts = filteredDebts.filter(debt => 
+                    debt.debtor.toLowerCase().includes(nameFilter.toLowerCase())
+                );
+            }
+            
+            if (startDate) {
+                const start = new Date(startDate);
+                filteredDebts = filteredDebts.filter(debt => 
+                    new Date(debt.date) >= start
+                );
+            }
+            
+            if (endDate) {
+                const end = new Date(endDate);
+                end.setHours(23, 59, 59, 999);
+                filteredDebts = filteredDebts.filter(debt => 
+                    new Date(debt.date) <= end
+                );
+            }
+            
+            // Process cross-debts (debts between same people but in opposite directions)
+            const processedDebts = processCrossDebts(filteredDebts);
+            
+            // Clear table
+            resultsTable.innerHTML = '';
+            
+            let total = 0;
+            
+            // Populate table
+            processedDebts.forEach((debt, index) => {
+                const row = document.createElement('tr');
+                const netAmount = debt.amount - (debt.discount || 0);
+                total += netAmount;
+                
+                row.innerHTML = `
+                    <td class="px-4 py-2">${formatDate(debt.date)}</td>
+                    <td class="px-4 py-2">${debt.debtor}</td>
+                    <td class="px-4 py-2">${debt.description}</td>
+                    <td class="px-4 py-2 text-right">${formatCurrency(debt.amount)}</td>
+                    <td class="px-4 py-2 text-right">${formatCurrency(debt.discount || 0)}</td>
+                    <td class="px-4 py-2 text-right">${formatCurrency(netAmount)}</td>
+                `;
+                
+                // Only add action buttons for admin
+                if (isAdmin) {
+                    const actionsCell = document.createElement('td');
+                    actionsCell.className = 'px-4 py-2 text-center';
+                    
+                    // Edit button
+                    const editBtn = document.createElement('button');
+                    editBtn.className = 'btn text-blue-600 mr-2';
+                    editBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" /></svg>';
+                    editBtn.addEventListener('click', () => editDebt(debt.id));
+                    
+                    // Delete button
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'btn text-red-600';
+                    deleteBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>';
+                    deleteBtn.addEventListener('click', () => deleteDebt(debt.id));
+                    
+                    actionsCell.appendChild(editBtn);
+                    actionsCell.appendChild(deleteBtn);
+                    row.appendChild(actionsCell);
+                }
+                
+                resultsTable.appendChild(row);
+                
+                // Animation for new rows
+                anime({
+                    targets: row,
+                    translateX: [20, 0],
+                    opacity: [0, 1],
+                    duration: 500,
+                    easing: 'easeOutQuad',
+                    delay: index * 50
+                });
+            });
+            
+            // Display total
+            totalAmount.textContent = `Total: ${formatCurrency(total)}`;
+            
+            // Update chart
+            updateChart();
+        }
+
+        // Process cross-debts (debts that cancel each other out)
+        function processCrossDebts(debts) {
+            // Create a copy to avoid modifying original data
+            const processedDebts = [...debts];
+            
+            // Create a map of net debts between pairs of people
+            const debtMap = new Map();
+            
+            debts.forEach(debt => {
+                // Skip processing if it's already been handled
+                if (debt.processed) return;
+                
+                const debtorCreditorPair = `${debt.debtor}-${currentUser}`;
+                const creditorDebtorPair = `${currentUser}-${debt.debtor}`;
+                
+                const netAmount = debt.amount - (debt.discount || 0);
+                
+                // Check if there's a debt in the opposite direction
+                if (debtMap.has(creditorDebtorPair)) {
+                    // There's a debt in the opposite direction
+                    const existingDebt = debtMap.get(creditorDebtorPair);
+                    const difference = existingDebt - netAmount;
+                    
+                    if (difference > 0) {
+                        // The existing debt is larger, update it
+                        debtMap.set(creditorDebtorPair, difference);
+                    } else if (difference < 0) {
+                        // This debt is larger, switch the direction
+                        debtMap.delete(creditorDebtorPair);
+                        debtMap.set(debtorCreditorPair, -difference);
+                    } else {
+                        // They cancel out exactly
+                        debtMap.delete(creditorDebtorPair);
+                    }
+                } else if (debtMap.has(debtorCreditorPair)) {
+                    // There's already a debt in this direction, add to it
+                    debtMap.set(debtorCreditorPair, debtMap.get(debtorCreditorPair) + netAmount);
+                } else {
+                    // This is a new debt direction
+                    debtMap.set(debtorCreditorPair, netAmount);
+                }
+            });
+            
+            return processedDebts;
+        }
+
+        // Add new debt
+        debtForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const debtorName = document.getElementById('debtorName').value.trim();
+            const debtDate = document.getElementById('debtDate').value;
+            const description = document.getElementById('debtDescription').value.trim();
+            const amount = parseFloat(document.getElementById('debtAmount').value);
+            const discount = parseFloat(document.getElementById('debtDiscount').value) || 0;
+            
+            if (!debtorName || !debtDate || !description || isNaN(amount) || amount <= 0) {
+                alert('Veuillez remplir tous les champs obligatoires correctement.');
+                return;
+            }
+            
+            const debtData = JSON.parse(localStorage.getItem('debtData'));
+            
+            // Add user if not exists
+            if (!debtData.users.some(user => user.name === debtorName)) {
+                debtData.users.push({ name: debtorName });
+            }
+            
+            // Add new debt
+            const newDebt = {
+                id: Date.now().toString(),
+                debtor: debtorName,
+                creditor: currentUser,
+                date: debtDate,
+                description,
+                amount,
+                discount,
+                createdAt: new Date().toISOString()
+            };
+            
+            debtData.debts.push(newDebt);
+            localStorage.setItem('debtData', JSON.stringify(debtData));
+            
+            // Clear form
+            debtForm.reset();
+            
+            // Show success animation
+            anime({
+                targets: debtForm,
+                backgroundColor: [
+                    { value: 'rgba(16, 185, 129, 0.2)', duration: 500 },
+                    { value: 'rgba(255, 255, 255, 0)', duration: 500 }
+                ],
+                easing: 'easeInOutQuad'
+            });
+            
+            // Reload data
+            loadDebts();
+        });
+
+        // Edit debt
+        function editDebt(id) {
+            const debtData = JSON.parse(localStorage.getItem('debtData'));
+            const debt = debtData.debts.find(d => d.id === id);
+            
+            if (!debt) return;
+            
+            // Fill form with debt data
+            document.getElementById('debtorName').value = debt.debtor;
+            document.getElementById('debtDate').value = debt.date;
+            document.getElementById('debtDescription').value = debt.description;
+            document.getElementById('debtAmount').value = debt.amount;
+            document.getElementById('debtDiscount').value = debt.discount || '';
+            
+            // Scroll to form
+            adminControls.scrollIntoView({ behavior: 'smooth' });
+            
+            // Highlight form
+            anime({
+                targets: debtForm,
+                backgroundColor: [
+                    { value: 'rgba(59, 130, 246, 0.2)', duration: 500 },
+                    { value: 'rgba(255, 255, 255, 0)', duration: 500 }
+                ],
+                easing: 'easeInOutQuad'
+            });
+            
+            // Update submit handler to edit instead of add
+            const originalSubmitHandler = debtForm.onsubmit;
+            debtForm.onsubmit = (e) => {
+                e.preventDefault();
+                
+                const debtorName = document.getElementById('debtorName').value.trim();
+                const debtDate = document.getElementById('debtDate').value;
+                const description = document.getElementById('debtDescription').value.trim();
+                const amount = parseFloat(document.getElementById('debtAmount').value);
+                const discount = parseFloat(document.getElementById('debtDiscount').value) || 0;
+                
+                if (!debtorName || !debtDate || !description || isNaN(amount) || amount <= 0) {
+                    alert('Veuillez remplir tous les champs obligatoires correctement.');
+                    return;
+                }
+                
+                const debtData = JSON.parse(localStorage.getItem('debtData'));
+                const debtIndex = debtData.debts.findIndex(d => d.id === id);
+                
+                if (debtIndex >= 0) {
+                    debtData.debts[debtIndex] = {
+                        ...debtData.debts[debtIndex],
+                        debtor: debtorName,
+                        date: debtDate,
+                        description,
+                        amount,
+                        discount,
+                        updatedAt: new Date().toISOString()
+                    };
+                    
+                    localStorage.setItem('debtData', JSON.stringify(debtData));
+                    
+                    // Clear form and restore original submit handler
+                    debtForm.reset();
+                    debtForm.onsubmit = originalSubmitHandler;
+                    
+                    // Show success animation
+                    anime({
+                        targets: debtForm,
+                        backgroundColor: [
+                            { value: 'rgba(16, 185, 129, 0.2)', duration: 500 },
+                            { value: 'rgba(255, 255, 255, 0)', duration: 500 }
+                        ],
+                        easing: 'easeInOutQuad'
+                    });
+                    
+                    // Reload data
+                    loadDebts();
+                }
+            };
+        }
+
+        // Delete debt
+        function deleteDebt(id) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette dette ?')) {
+                const debtData = JSON.parse(localStorage.getItem('debtData'));
+                const debtIndex = debtData.debts.findIndex(d => d.id === id);
+                
+                if (debtIndex >= 0) {
+                    debtData.debts.splice(debtIndex, 1);
+                    localStorage.setItem('debtData', JSON.stringify(debtData));
+                    
+                    // Reload data
+                    loadDebts();
+                }
+            }
+        }
+
+        // Search functionality
+        searchBtn.addEventListener('click', () => {
+            const nameFilter = document.getElementById('searchName').value.trim();
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            
+            loadDebts(nameFilter, startDate, endDate);
+        });
+
+        // Autocomplete for debtor name
+        function setupAutocomplete(inputId, suggestionsId) {
+            const input = document.getElementById(inputId);
+            const suggestions = document.getElementById(suggestionsId);
+            
+            input.addEventListener('input', () => {
+                const value = input.value.trim().toLowerCase();
+                
+                // Clear suggestions
+                suggestions.innerHTML = '';
+                
+                if (!value) return;
+                
+                const debtData = JSON.parse(localStorage.getItem('debtData'));
+                const matches = debtData.users.filter(user => 
+                    user.name.toLowerCase().includes(value)
+                );
+                
+                matches.forEach(user => {
+                    const div = document.createElement('div');
+                    div.textContent = user.name;
+                    div.addEventListener('click', () => {
+                        input.value = user.name;
+                        suggestions.innerHTML = '';
+                    });
+                    suggestions.appendChild(div);
+                });
+            });
+            
+            // Hide suggestions when clicking outside
+            document.addEventListener('click', (e) => {
+                if (e.target !== input && e.target !== suggestions) {
+                    suggestions.innerHTML = '';
+                }
+            });
+        }
+
+        // Set up autocomplete for both inputs
+        setupAutocomplete('debtorName', 'debtorSuggestions');
+        setupAutocomplete('searchName', 'searchSuggestions');
+
+        // Update chart with debt data
+        function updateChart() {
+            const debtData = JSON.parse(localStorage.getItem('debtData'));
+            const ctx = document.getElementById('debtChart').getContext('2d');
+            
+            // Prepare data for chart
+            const debtsByMonth = {};
+            
+            debtData.debts.forEach(debt => {
+                const date = new Date(debt.date);
+                const monthYear = `${date.getMonth() + 1}/${date.getFullYear()}`;
+                
+                if (!debtsByMonth[monthYear]) {
+                    debtsByMonth[monthYear] = 0;
+                }
+                
+                debtsByMonth[monthYear] += debt.amount - (debt.discount || 0);
+            });
+            
+            const labels = Object.keys(debtsByMonth).sort((a, b) => {
+                const [aMonth, aYear] = a.split('/').map(Number);
+                const [bMonth, bYear] = b.split('/').map(Number);
+                
+                if (aYear !== bYear) return aYear - bYear;
+                return aMonth - bMonth;
+            });
+            
+            const values = labels.map(label => debtsByMonth[label]);
+            
+            // Check if chart exists and destroy it
+            if (chart) {
+                chart.destroy();
+            }
+            
+            // Theme colors
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            const textColor = isDarkMode ? '#f9fafb' : '#1f2937';
+            const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+            
+            // Create new chart
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: 'Dettes par mois',
+                        data: values,
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: textColor
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                color: gridColor
+                            },
+                            ticks: {
+                                color: textColor
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: gridColor
+                            },
+                            ticks: {
+                                color: textColor,
+                                callback: function(value) {
+                                    return formatCurrency(value);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Helper functions
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('fr-FR');
+        }
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            }).format(amount);
+        }
+
+        // Set today's date as default
+        document.getElementById('debtDate').valueAsDate = new Date();
+
+        // Initialize app when loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set today as default end date
+            const today = new Date();
+            document.getElementById('endDate').valueAsDate = today;
+            
+            // Set 30 days ago as default start date
+            const thirtyDaysAgo = new Date(today);
+            thirtyDaysAgo.setDate(today.getDate() - 30);
+            document.getElementById('startDate').valueAsDate = thirtyDaysAgo;
+        });
+    </script>
 </body>
 </html>
