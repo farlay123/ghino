@@ -1,87 +1,56 @@
-let data = [
-  { name: "Nguyễn Văn A", date: "2025-04-01", content: "Mượn sách", amount: 500000, discount: 50000 },
-  { name: "Trần Thị B", date: "2025-04-05", content: "Ăn chung", amount: 300000, discount: 0 }
+
+const data = [
+  { name: "Nguyễn Văn A", date: "2025-04-01", content: "Mượn tiền cà phê", amount: 50000, discount: 0 },
+  { name: "Nguyễn Văn A", date: "2025-04-05", content: "Ứng tiền đi ăn", amount: 200000, discount: 10000 },
+  { name: "Trần Thị B", date: "2025-04-03", content: "Mua đồ hộ", amount: 150000, discount: 0 },
 ];
 
-const searchInput = document.getElementById("searchInput");
-const resultBox = document.getElementById("result");
-const adminForm = document.getElementById("adminForm");
-
 function searchDebt() {
-  const query = searchInput.value.trim();
-  const found = data.find(d => d.name.toLowerCase() === query.toLowerCase());
-  if (found) {
-    document.getElementById("name").textContent = found.name;
-    document.getElementById("date").textContent = found.date;
-    document.getElementById("content").textContent = found.content;
-    document.getElementById("amount").textContent = found.amount.toLocaleString() + " đ";
-    document.getElementById("discount").textContent = found.discount.toLocaleString() + " đ";
-    document.getElementById("final").textContent = (found.amount - found.discount).toLocaleString() + " đ";
-    resultBox.classList.remove("hidden");
-  } else {
-    alert("Không tìm thấy tên người nợ.");
-  }
-}
+  const name = document.getElementById("searchInput").value.trim();
+  const start = document.getElementById("startDate").value;
+  const end = document.getElementById("endDate").value;
+  const filtered = data.filter(item => {
+    const matchName = item.name.toLowerCase().includes(name.toLowerCase());
+    const matchDate = (!start || item.date >= start) && (!end || item.date <= end);
+    return matchName && matchDate;
+  });
 
-function addDebt() {
-  const name = document.getElementById("adminName").value.trim();
-  const date = document.getElementById("adminDate").value;
-  const content = document.getElementById("adminContent").value.trim();
-  const amount = parseInt(document.getElementById("adminAmount").value);
-  const discount = parseInt(document.getElementById("adminDiscount").value) || 0;
-  if (name && date && content && amount) {
-    data.push({ name, date, content, amount, discount });
-    renderTable();
-    renderChart();
-    alert("Đã thêm khoản nợ mới!");
-  } else {
-    alert("Vui lòng điền đầy đủ thông tin.");
+  const resultBox = document.getElementById("result");
+  if (filtered.length === 0) {
+    resultBox.classList.add("hidden");
+    return;
   }
-}
 
-function renderTable() {
+  const latest = filtered[filtered.length - 1];
+  document.getElementById("name").textContent = latest.name;
+  document.getElementById("date").textContent = latest.date;
+  document.getElementById("content").textContent = latest.content;
+  document.getElementById("amount").textContent = latest.amount.toLocaleString();
+  document.getElementById("discount").textContent = latest.discount.toLocaleString();
+  document.getElementById("final").textContent = (latest.amount - latest.discount).toLocaleString();
+  resultBox.classList.remove("hidden");
+
   const tbody = document.querySelector("#debtTable tbody");
   tbody.innerHTML = "";
-  data.forEach(row => {
-    tbody.innerHTML += `
-      <tr>
-        <td>${row.name}</td>
-        <td>${row.date}</td>
-        <td>${row.content}</td>
-        <td>${row.amount.toLocaleString()}</td>
-        <td>${row.discount.toLocaleString()}</td>
-        <td>${(row.amount - row.discount).toLocaleString()}</td>
-      </tr>`;
+  filtered.forEach(item => {
+    const row = document.createElement("tr");
+    row.innerHTML = `<td>${item.date}</td><td>${item.content}</td><td>${(item.amount - item.discount).toLocaleString()}</td>`;
+    tbody.appendChild(row);
   });
-}
 
-function renderChart() {
   const ctx = document.getElementById("debtChart").getContext("2d");
-  const labels = data.map(d => d.date);
-  const amounts = data.map(d => d.amount - d.discount);
   if (window.debtChart) window.debtChart.destroy();
   window.debtChart = new Chart(ctx, {
-    type: 'bar',
+    type: 'line',
     data: {
-      labels: labels,
+      labels: filtered.map(i => i.date),
       datasets: [{
-        label: 'Tiền cần thu',
-        data: amounts,
-        backgroundColor: '#007bff'
+        label: 'Dòng tiền',
+        data: filtered.map(i => i.amount - i.discount),
+        borderColor: 'blue',
+        backgroundColor: 'rgba(0,119,255,0.1)',
+        tension: 0.4
       }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { display: false }
-      }
     }
   });
 }
-
-window.onload = () => {
-  renderTable();
-  renderChart();
-  const isAdmin = window.location.search.includes("admin=true");
-  if (isAdmin) adminForm.classList.remove("hidden");
-};
