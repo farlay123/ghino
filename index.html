@@ -1,55 +1,78 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ghi nợ | Hoàng Minh Thản</title>
-  <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>📊 Tra cứu</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="script.js"></script>
 </head>
 <body>
   <div class="container">
-    <h1>📒 Ghi nợ | Hoàng Minh Thản</h1>
-    <div class="main-layout">
+    <header>
+      <img src="logo.png" alt="Logo" class="logo">
+      <h1>📒 Ghi nợ | Tra cứu</h1>
+      <p class="slogan">"Ghi nợ xịn xò – Không lo quên số!"</p>
+      <label class="switch">
+        <input type="checkbox" id="theme-toggle">
+        <span class="slider"></span>
+      </label>
+    </header>
+
+    <div class="content">
       <div class="left-panel">
         <h2>🔍 Tra cứu khoản nợ</h2>
-        <input type="text" id="searchInput" placeholder="Nhập tên người nợ..." />
-        <input type="date" id="startDate" />
-        <input type="date" id="endDate" />
+        <input type="text" id="searchInput" placeholder="Nhập tên bạn...">
+        <div class="date-range">
+          <input type="date" id="startDate">
+          <span>-</span>
+          <input type="date" id="endDate">
+        </div>
         <button onclick="searchDebt()">Tra cứu</button>
+
         <div id="result" class="hidden">
-          <h3>Kết quả:</h3>
-          <p><strong>🧍 Tên:</strong> <span id="name"></span></p>
-          <p><strong>🗓 Ngày:</strong> <span id="date"></span></p>
-          <p><strong>📋 Nội dung:</strong> <span id="content"></span></p>
-          <p><strong>💰 Số tiền gốc:</strong> <span id="amount"></span></p>
-          <p><strong>🔻 Chiết khấu:</strong> <span id="discount"></span></p>
-          <p><strong>✅ Cần thanh toán:</strong> <span id="final"></span></p>
+          <h3>Kết quả tra cứu</h3>
+          <table id="debtTable">
+            <thead>
+              <tr>
+                <th>📅 Ngày</th>
+                <th>🧍 Người nợ</th>
+                <th>📋 Nội dung</th>
+                <th>💰 Số tiền</th>
+                <th>🔻 Giảm</th>
+                <th>✅ Còn lại</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
         </div>
       </div>
+
       <div class="right-panel">
-        <h2>📊 Biểu đồ dòng tiền</h2>
-        <canvas id="debtChart" width="400" height="200"></canvas>
-        <h3>📋 Bảng kê giao dịch</h3>
-        <table id="debtTable">
-          <thead>
-            <tr>
-              <th>Ngày</th>
-              <th>Nội dung</th>
-              <th>Số tiền</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+        <h2>📈 Dòng tiền</h2>
+        <canvas id="chartCanvas"></canvas>
+
+        <div class="bank-info">
+          <h3>🏦 Chuyển khoản</h3>
+          <p><strong>Tên:</strong> Hoàng Minh Thản</p>
+          <p><strong>Số tài khoản:</strong> <span class="highlight">956216528888</span> (Techcombank)</p>
+          <img src="image.png" alt="QR chuyển khoản" class="qr-large">
+        </div>
       </div>
     </div>
-    <div class="bank-info">
-      <h3>🏦 Thông tin chuyển khoản</h3>
-      <p><strong>Tên tài khoản:</strong> <span class="bank-name">Hoàng Minh Thản</span></p>
-      <p><strong>Số tài khoản:</strong> <span class="bank-number">956216528888</span> (Techcombank)</p>
-      <img src="image.png" alt="QR chuyển khoản" class="qr" />
+
+    <div id="adminPanel" class="hidden">
+      <h2>📝 Ghi nợ mới</h2>
+      <form id="debtForm">
+        <input type="text" id="debtor" placeholder="Tên người nợ" required>
+        <input type="date" id="debtDate" required>
+        <input type="text" id="content" placeholder="Nội dung" required>
+        <input type="number" id="amount" placeholder="Số tiền" required>
+        <input type="number" id="discount" placeholder="Giảm giá (nếu có)">
+        <button type="submit">Thêm</button>
+      </form>
     </div>
   </div>
-  <script src="script.js"></script>
 </body>
 </html>
