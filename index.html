@@ -6,17 +6,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>📊 Tra cứu</title>
   <link rel="stylesheet" href="style.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script defer src="script.js"></script>
 </head>
 <body>
   <div class="container">
     <header>
       <img src="logo.png" alt="Logo" class="logo">
-      <h1>📒 Ghi nợ | Tra cứu</h1>
-      <p class="slogan">"Ghi nợ xịn xò – Không lo quên số!"</p>
+      <div class="header-title">
+        <h1>📒 Ghi nợ | Tra cứu</h1>
+        <p class="slogan">"Ghi nợ xịn xò – Không lo quên số!"</p>
+      </div>
       <label class="switch">
         <input type="checkbox" id="theme-toggle">
-        <span class="slider"></span>
+        <span class="slider round"></span>
       </label>
     </header>
 
@@ -26,7 +29,7 @@
         <input type="text" id="searchInput" placeholder="Nhập tên bạn...">
         <div class="date-range">
           <input type="date" id="startDate">
-          <span>-</span>
+          <span>đến</span>
           <input type="date" id="endDate">
         </div>
         <button onclick="searchDebt()">Tra cứu</button>
@@ -37,7 +40,7 @@
             <thead>
               <tr>
                 <th>📅 Ngày</th>
-                <th>🧍 Người nợ</th>
+                <th>🧐 Người nợ</th>
                 <th>📋 Nội dung</th>
                 <th>💰 Số tiền</th>
                 <th>🔻 Giảm</th>
@@ -56,7 +59,8 @@
         <div class="bank-info">
           <h3>🏦 Chuyển khoản</h3>
           <p><strong>Tên:</strong> Hoàng Minh Thản</p>
-          <p><strong>Số tài khoản:</strong> <span class="highlight">956216528888</span> (Techcombank)</p>
+          <p><strong>Số tài khoản:</strong> <span class="highlight">956216528888</span></p>
+          <p><strong>Ngân hàng:</strong> Techcombank</p>
           <img src="image.png" alt="QR chuyển khoản" class="qr-large">
         </div>
       </div>
@@ -67,12 +71,13 @@
       <form id="debtForm">
         <input type="text" id="debtor" placeholder="Tên người nợ" required>
         <input type="date" id="debtDate" required>
-        <input type="text" id="content" placeholder="Nội dung" required>
+        <input type="text" id="contentInput" placeholder="Nội dung" required>
         <input type="number" id="amount" placeholder="Số tiền" required>
         <input type="number" id="discount" placeholder="Giảm giá (nếu có)">
-        <button type="submit">Thêm</button>
+        <button type="submit">Thêm khoản nợ</button>
       </form>
     </div>
   </div>
 </body>
 </html>
+
